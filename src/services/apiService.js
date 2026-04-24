@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7038/api';
+const API_BASE_URL = 'https://hothibichnhung-2123110314.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -33,8 +33,7 @@ export const userService = {
 };
 
 export const paymentService = {
-  // Liên kết với server Node.js riêng (cổng 3000) để tạo URL thanh toán chuẩn xác
-  createVnPayUrl: (data) => axios.get(`http://localhost:3000/payment?amount=${data.amount}&orderId=${data.orderId}`),
+  createVnPayUrl: (data) => api.post('/Payments/create-vnpay-url', data),
   processVnPayReturn: (params) => api.get(`/Payments/vnpay-return${params}`),
 };
 
