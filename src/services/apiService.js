@@ -35,6 +35,11 @@ export const userService = {
 export const paymentService = {
   createVnPayUrl: (data) => api.post('/Payments/create-vnpay-url', data),
   processVnPayReturn: (params) => api.get(`/Payments/vnpay-return${params}`),
+  createDemoVnPayUrl: async ({ amount, orderId }) => {
+    // Gọi thẳng sang Node.js server demo vnpay
+    const response = await fetch(`http://localhost:3000/payment?amount=${amount}&orderId=${orderId}`);
+    return await response.json();
+  }
 };
 
 export default api;

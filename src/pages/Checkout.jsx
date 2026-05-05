@@ -56,13 +56,13 @@ Số ĐT: ${form.phone}
 Ghi chú: ${form.note || 'Không có'}`;
 
       const orderData = {
-        userId: user?.id || 1, // Dùng ID người dùng đăng nhập, hoặc mặc định 1
-        totalPrice: finalTotal,
+        userId: Number(user?.id || 1), // Đảm bảo là kiểu số (long)
+        totalPrice: Number(finalTotal), // Đảm bảo là kiểu số (decimal)
         status: 0, // 0 = Pending (Enum)
         orderDetails: cartItems.map(item => ({
-          productId: item.id,
-          price: item.price,
-          quantity: item.quantity
+          productId: Number(item.id),
+          price: Number(item.price),
+          quantity: Number(item.quantity)
         }))
       };
 
@@ -70,14 +70,17 @@ Ghi chú: ${form.note || 'Không có'}`;
       const createdOrder = response.data;
 
       if (paymentMethod === 'vnpay') {
-        // Gọi API lấy URL thanh toán VNPay
-        const vnpayResponse = await paymentService.createVnPayUrl({
+        // Gọi API lấy URL thanh toán VNPay từ Node demo (localhost:3000)
+        const vnpayResponse = await paymentService.createDemoVnPayUrl({
           orderId: createdOrder.id,
           amount: finalTotal
         });
-        
-        // Chuyển hướng sang VNPay
-        window.location.href = vnpayResponse.data.url;
+
+        if (vnpayResponse && vnpayResponse.paymentUrl) {
+          window.location.href = vnpayResponse.paymentUrl;
+        } else {
+          throw new Error("Không lấy được URL thanh toán từ server VNPay!");
+        }
       } else {
         clearCart();
         navigate('/order-success');

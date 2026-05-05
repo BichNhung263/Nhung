@@ -20,7 +20,7 @@ const Promotions = () => {
           oldPrice: p.id % 2 === 0 ? p.price * 1.25 : null,
           discount: p.id % 2 === 0 ? 20 : null
         })).filter(p => p.discount !== null);
-        
+
         setDiscountProducts(promoItems);
       } catch (error) {
         console.error('Lỗi khi tải khuyến mãi:', error);
@@ -57,10 +57,10 @@ const Promotions = () => {
   return (
     <div className="container animate-fade-in" style={{ padding: '2rem 1.5rem' }}>
       {/* Banner Khuyến Mãi */}
-      <section style={{ 
-        background: 'linear-gradient(135deg, #4f46e5, #ec4899)', 
-        borderRadius: '2.5rem', 
-        padding: '4rem 3rem', 
+      <section style={{
+        background: 'linear-gradient(135deg, #4f46e5, #ec4899)',
+        borderRadius: '2.5rem',
+        padding: '4rem 3rem',
         color: 'white',
         marginBottom: '4rem',
         position: 'relative',
@@ -85,7 +85,7 @@ const Promotions = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Decorative elements */}
         <div style={{ position: 'absolute', right: '-50px', top: '-50px', width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
         <div style={{ position: 'absolute', right: '100px', bottom: '-20px', width: '150px', height: '150px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }}></div>
@@ -100,26 +100,26 @@ const Promotions = () => {
             <p style={{ color: 'var(--text-light)', marginTop: '0.5rem' }}>Lưu mã ngay để sử dụng khi thanh toán</p>
           </div>
         </div>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {vouchers.map((v, index) => (
-            <div key={index} style={{ 
-              background: 'white', 
-              borderRadius: '1.5rem', 
-              padding: '1.5rem', 
+            <div key={index} style={{
+              background: 'white',
+              borderRadius: '1.5rem',
+              padding: '1.5rem',
               border: '2px dashed #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               gap: '1.5rem',
               position: 'relative'
             }}>
-              <div style={{ 
-                width: '60px', 
-                height: '60px', 
-                borderRadius: '1rem', 
-                background: v.color, 
-                display: 'flex', 
-                alignItems: 'center', 
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '1rem',
+                background: v.color,
+                display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 color: 'white'
               }}>
@@ -130,12 +130,12 @@ const Promotions = () => {
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginBottom: '0.25rem' }}>{v.desc}</p>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: v.color }}>{v.min}</span>
               </div>
-              <button style={{ 
-                padding: '0.5rem 1rem', 
-                background: '#f1f5f9', 
-                border: 'none', 
-                borderRadius: '0.75rem', 
-                fontSize: '0.8rem', 
+              <button style={{
+                padding: '0.5rem 1rem',
+                background: '#f1f5f9',
+                border: 'none',
+                borderRadius: '0.75rem',
+                fontSize: '0.8rem',
                 fontWeight: 700,
                 cursor: 'pointer'
               }}>
@@ -154,7 +154,7 @@ const Promotions = () => {
             <p style={{ color: 'var(--text-light)', marginTop: '0.5rem' }}>Cơ hội cuối cùng để mua với giá ưu đãi</p>
           </div>
         </div>
-        
+
         <div className="product-grid">
           {discountProducts.length > 0 ? discountProducts.map((product) => (
             <div key={product.id} className="product-card">
@@ -168,7 +168,7 @@ const Promotions = () => {
                   </div>
                 )}
               </Link>
-              
+
               <div className="product-info">
                 <span className="product-category">{product.category?.name}</span>
                 <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
@@ -178,9 +178,9 @@ const Promotions = () => {
                   <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ef4444' }}>{product.price?.toLocaleString('vi-VN')}đ</span>
                   <span style={{ fontSize: '0.9rem', color: 'var(--text-light)', textDecoration: 'line-through' }}>{product.oldPrice?.toLocaleString('vi-VN')}đ</span>
                 </div>
-                <button 
+                <button
                   onClick={() => handleAddToCart(product)}
-                  className="btn btn-primary" 
+                  className="btn btn-primary"
                   style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                 >
                   <ShoppingCart size={18} /> Thêm vào giỏ

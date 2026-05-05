@@ -12,7 +12,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [toast, setToast] = useState({ show: false, productName: '' });
-  
+
   const { addToCart, itemCount } = useCart();
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const Home = () => {
           productService.getAll(),
           categoryService.getAll()
         ]);
-        
+
         setAllProducts(prodRes.data);
-        setProducts(prodRes.data); 
+        setProducts(prodRes.data);
         setCategories(catRes.data);
       } catch (error) {
         console.error('Lỗi khi tải dữ liệu từ API:', error);
@@ -39,7 +39,7 @@ const Home = () => {
   const handleAddToCart = useCallback((product) => {
     addToCart(product);
     setToast({ show: true, productName: product.name });
-    
+
     // Auto-hide toast after 3 seconds
     setTimeout(() => {
       setToast({ show: false, productName: '' });
@@ -54,7 +54,7 @@ const Home = () => {
       const filtered = allProducts.filter(p => p.category?.id === categoryId);
       setProducts(filtered);
     }
-    
+
     // Scroll to products section smoothly
     const productsSection = document.getElementById('products');
     if (productsSection) {
@@ -74,7 +74,7 @@ const Home = () => {
   return (
     <>
       <Hero />
-      
+
       <main className="container">
         {/* Categories Section */}
         <section id="categories" style={{ paddingTop: '2rem' }}>
@@ -87,9 +87,9 @@ const Home = () => {
               Xem tất cả <ArrowRight size={16} />
             </a>
           </div>
-          
+
           <div className="category-grid">
-            <div 
+            <div
               className={`category-card ${selectedCategoryId === null ? 'active' : ''}`}
               onClick={() => handleCategorySelect(null)}
               style={{ cursor: 'pointer' }}
@@ -101,8 +101,8 @@ const Home = () => {
             </div>
 
             {categories.length > 0 ? categories.map((cat) => (
-              <div 
-                key={cat.id} 
+              <div
+                key={cat.id}
                 className={`category-card ${selectedCategoryId === cat.id ? 'active' : ''}`}
                 onClick={() => handleCategorySelect(cat.id)}
                 style={{ cursor: 'pointer' }}
@@ -135,7 +135,7 @@ const Home = () => {
               Xem tất cả <ArrowRight size={16} />
             </a>
           </div>
-          
+
           <div className="product-grid">
             {products.length > 0 ? products.map((product) => (
               <div key={product.id} className="product-card">
@@ -145,7 +145,7 @@ const Home = () => {
                 {product.quantity === 0 && (
                   <span className="product-badge" style={{ color: '#ef4444' }}>Hết hàng</span>
                 )}
-                
+
                 <Link to={`/product/${product.id}`} className="product-image-container">
                   {product.image ? (
                     <img src={product.image} alt={product.name} className="product-image" />
@@ -174,18 +174,18 @@ const Home = () => {
                     <Heart size={18} />
                   </div>
                 </Link>
-                
+
                 <div className="product-info">
                   <span className="product-category">{product.category?.name || 'Sản phẩm'}</span>
                   <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
                     <h3 className="product-name">{product.name}</h3>
                   </Link>
                   <p className="product-desc">{product.description || 'Chất lượng cao, thiết kế độc đáo.'}</p>
-                  
+
                   <div className="product-footer">
                     <span className="product-price">{product.price?.toLocaleString('vi-VN')}đ</span>
-                    <button 
-                      className="product-add-btn" 
+                    <button
+                      className="product-add-btn"
                       title="Thêm vào giỏ"
                       onClick={() => handleAddToCart(product)}
                       disabled={product.quantity === 0}

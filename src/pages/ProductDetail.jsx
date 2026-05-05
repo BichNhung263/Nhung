@@ -11,7 +11,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [toast, setToast] = useState(false);
-  
+
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const ProductDetail = () => {
       try {
         const res = await productService.getById(id);
         setProduct(res.data);
-        
+
         // Fetch related products (same category)
         const allRes = await productService.getAll();
         const related = allRes.data
@@ -75,9 +75,9 @@ const ProductDetail = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem' }} className="product-detail-grid">
         {/* Left: Image */}
         <div className="product-detail-image-section">
-          <div style={{ 
-            borderRadius: '2rem', 
-            overflow: 'hidden', 
+          <div style={{
+            borderRadius: '2rem',
+            overflow: 'hidden',
             background: '#f8fafc',
             boxShadow: 'var(--shadow-lg)',
             aspectRatio: '1/1',
@@ -96,12 +96,12 @@ const ProductDetail = () => {
         {/* Right: Info */}
         <div className="product-detail-info">
           <div style={{ marginBottom: '1.5rem' }}>
-            <span style={{ 
-              background: 'var(--primary-light)', 
-              color: 'var(--primary-color)', 
-              padding: '0.4rem 1rem', 
-              borderRadius: '2rem', 
-              fontSize: '0.8rem', 
+            <span style={{
+              background: 'var(--primary-light)',
+              color: 'var(--primary-color)',
+              padding: '0.4rem 1rem',
+              borderRadius: '2rem',
+              fontSize: '0.8rem',
               fontWeight: 700,
               display: 'inline-block',
               marginBottom: '1rem'
@@ -132,38 +132,38 @@ const ProductDetail = () => {
           </p>
 
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', alignItems: 'center' }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              background: '#f1f5f9', 
-              borderRadius: '1rem', 
-              padding: '0.5rem' 
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              background: '#f1f5f9',
+              borderRadius: '1rem',
+              padding: '0.5rem'
             }}>
-              <button 
+              <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 style={{ background: 'white', border: 'none', borderRadius: '0.75rem', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
               >
                 <Minus size={16} />
               </button>
               <span style={{ width: '40px', textAlign: 'center', fontWeight: 700, fontSize: '1rem' }}>{quantity}</span>
-              <button 
+              <button
                 onClick={() => setQuantity(Math.min(product.quantity, quantity + 1))}
                 style={{ background: 'white', border: 'none', borderRadius: '0.75rem', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
               >
                 <Plus size={16} />
               </button>
             </div>
-            
-            <button 
+
+            <button
               onClick={handleAddToCart}
               disabled={product.quantity === 0}
-              className="btn btn-primary" 
+              className="btn btn-primary"
               style={{ flex: 1, padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', fontSize: '1rem' }}
             >
               <ShoppingCart size={20} />
               {product.quantity === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}
             </button>
-            
+
             <button style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '1rem', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}>
               <Heart size={20} />
             </button>

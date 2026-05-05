@@ -11,7 +11,8 @@ import Register from './pages/Register';
 import ProductDetail from './pages/ProductDetail';
 import Promotions from './pages/Promotions';
 import Contact from './pages/Contact';
-import VNPayReturn from './pages/VNPayReturn';
+import MockPayment from './pages/MockPayment';
+import VnPayReturn from './pages/VnPayReturn';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import './index.css';
@@ -33,7 +34,8 @@ function App() {
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/promotions" element={<Promotions />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/vnpay-return" element={<VNPayReturn />} />
+              <Route path="/mock-payment" element={<MockPayment />} />
+              <Route path="/vnpay-return" element={<VnPayReturn />} />
             </Routes>
             <Footer />
           </div>

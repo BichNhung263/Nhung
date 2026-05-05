@@ -1,114 +1,128 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { CheckCircle, XCircle, Loader2, ArrowRight, ShoppingBag, Calendar, CreditCard } from 'lucide-react';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { CheckCircle, XCircle, Loader2, ArrowRight } from 'lucide-react';
 import { paymentService } from '../services/apiService';
 import { useCart } from '../context/CartContext';
 
-const VNPayReturn = () => {
-  const location = useLocation();
+const VnPayReturn = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [status, setStatus] = useState('processing');
   const { clearCart } = useCart();
-  const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const verifyPayment = async () => {
+    const processPayment = async () => {
       try {
-        // Gửi toàn bộ query params về backend để verify chữ ký và cập nhật trạng thái
-        const params = location.search;
-        const response = await paymentService.processVnPayReturn(params);
-        setResult(response.data);
-        clearCart(); // Thanh toán thành công mới xóa giỏ hàng (hoặc tùy logic)
-      } catch (err) {
-        console.error('Lỗi xác thực thanh toán:', err);
-        setError(err.response?.data?.message || 'Có lỗi xảy ra trong quá trình thanh toán');
-      } finally {
-        setLoading(false);
+        const responseCode = searchParams.get('vnp_ResponseCode');
+        
+        // Gọi API backend C# để cập nhật trạng thái đơn hàng (nó sẽ bypass chữ ký do code C# cho phép)
+        // Dùng location.search để lấy nguyên chuỗi query string
+        await paymentService.processVnPayReturn(window.location.search);
+        
+        if (responseCode === '00') {
+          setStatus('success');
+          clearCart();
+        } else {
+          setStatus('fail');
+        }
+      } catch (error) {
+        console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+        // Ngay cả khi backend lỗi, ta vẫn hiển thị theo responseCode của VNPay cho mục đích demo
+        if (searchParams.get('vnp_ResponseCode') === '00') {
+            setStatus('success');
+            clearCart();
+        } else {
+            setStatus('fail');
+        }
       }
     };
 
-    verifyPayment();
-  }, [location, clearCart]);
-
-  if (loading) {
-    return (
-      <div className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
-        <Loader2 size={48} className="checkout-spinner" style={{ color: 'var(--primary-color)', margin: '0 auto 1.5rem' }} />
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Đang xác thực giao dịch...</h2>
-        <p style={{ color: 'var(--text-light)', marginTop: '0.5rem' }}>Vui lòng không tắt trình duyệt</p>
-      </div>
-    );
-  }
+    if (searchParams.toString()) {
+        processPayment();
+    }
+  }, [searchParams]);
 
   return (
-    <div className="container animate-fade-in" style={{ padding: '4rem 1.5rem', minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#f0f2f5', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '20px',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
       <div style={{ 
-        maxWidth: '500px', 
         width: '100%', 
+        maxWidth: '500px', 
         background: 'white', 
-        borderRadius: '2rem', 
-        padding: '3rem', 
-        boxShadow: 'var(--shadow-lg)',
-        textAlign: 'center',
-        border: '1px solid #f1f5f9'
+        borderRadius: '20px', 
+        boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+        overflow: 'hidden'
       }}>
-        {result ? (
-          <>
-            <div style={{ width: '80px', height: '80px', background: '#ecfdf5', color: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
-              <CheckCircle size={48} />
-            </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '1rem' }}>Thanh toán thành công!</h1>
-            <p style={{ color: 'var(--text-light)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
-              Cảm ơn bạn đã tin tưởng và mua sắm tại NhungStore. Đơn hàng của bạn đã được thanh toán qua VNPay và đang được xử lý.
-            </p>
+        {/* Header */}
+        <div style={{ 
+          background: '#005baa', 
+          padding: '25px', 
+          color: 'white', 
+          textAlign: 'center',
+          position: 'relative'
+        }}>
+          <img src="https://sandbox.vnpayment.vn/paymentv2/Images/brands/logo-vnpay.png" alt="VNPay" style={{ height: '35px', filter: 'brightness(0) invert(1)' }} />
+          <p style={{ margin: '10px 0 0', fontSize: '0.9rem', opacity: 0.8 }}>Kết quả giao dịch VNPay Demo</p>
+        </div>
 
-            <div style={{ background: '#f8fafc', borderRadius: '1.5rem', padding: '1.5rem', marginBottom: '2.5rem', textAlign: 'left' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--text-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><ShoppingBag size={16} /> Mã đơn hàng:</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-dark)' }}>#{result.orderId}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--text-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CreditCard size={16} /> Phương thức:</span>
-                <span style={{ fontWeight: 600, color: 'var(--text-dark)' }}>VNPay</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--text-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={16} /> Thời gian:</span>
-                <span style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{new Date().toLocaleDateString('vi-VN')}</span>
-              </div>
+        {/* Body */}
+        <div style={{ padding: '40px 30px', textAlign: 'center' }}>
+          {status === 'processing' ? (
+            <div>
+              <Loader2 size={64} color="#005baa" className="animate-spin" style={{ margin: '0 auto 20px' }} />
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '10px' }}>Đang xử lý kết quả...</h3>
+              <p style={{ color: '#666' }}>Vui lòng chờ trong giây lát</p>
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <Link to="/" className="btn btn-primary" style={{ width: '100%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                Quay lại trang chủ <ArrowRight size={18} />
-              </Link>
-              <Link to="/profile" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
-                Xem lịch sử đơn hàng
-              </Link>
-            </div>
-          </>
-        ) : (
-          <>
-            <div style={{ width: '80px', height: '80px', background: '#fef2f2', color: '#ef4444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
-              <XCircle size={48} />
-            </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '1rem' }}>Thanh toán thất bại</h1>
-            <p style={{ color: 'var(--text-light)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
-              {error || 'Giao dịch của bạn không thể hoàn tất. Vui lòng kiểm tra lại số dư hoặc thử lại với phương thức khác.'}
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <Link to="/checkout" className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>
-                Thử lại thanh toán
-              </Link>
-              <Link to="/" style={{ color: 'var(--text-light)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
-                Quay về trang chủ
+          ) : status === 'success' ? (
+            <div>
+              <CheckCircle size={80} color="#22c55e" style={{ margin: '0 auto 20px' }} />
+              <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#22c55e', marginBottom: '10px' }}>Thanh toán thành công!</h3>
+              <p style={{ color: '#64748b', marginBottom: '30px' }}>Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được thanh toán.</p>
+              <Link to="/" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                background: '#005baa', color: 'white', padding: '12px 24px',
+                borderRadius: '10px', textDecoration: 'none', fontWeight: 600,
+                transition: 'all 0.2s'
+              }}>
+                Tiếp tục mua sắm <ArrowRight size={18} />
               </Link>
             </div>
-          </>
-        )}
+          ) : (
+            <div>
+              <XCircle size={80} color="#ef4444" style={{ margin: '0 auto 20px' }} />
+              <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ef4444', marginBottom: '10px' }}>Thanh toán thất bại</h3>
+              <p style={{ color: '#64748b', marginBottom: '30px' }}>Giao dịch đã bị hủy hoặc xảy ra lỗi trong quá trình thanh toán.</p>
+              <Link to="/cart" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                background: '#f8fafc', color: '#334155', padding: '12px 24px',
+                border: '1px solid #cbd5e1', borderRadius: '10px', textDecoration: 'none', fontWeight: 600,
+                transition: 'all 0.2s'
+              }}>
+                Quay lại giỏ hàng
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
+      
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default VNPayReturn;
+export default VnPayReturn;
