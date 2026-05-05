@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ShoppingCart, Heart, Layers, ArrowRight, Check, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { productService, categoryService } from '../services/apiService';
+import { productService, categoryService, getImageUrl } from '../services/apiService';
 import Hero from '../components/Hero';
 import { useCart } from '../context/CartContext';
 
@@ -109,7 +109,7 @@ const Home = () => {
               >
                 <div className="category-icon">
                   {cat.image ? (
-                    <img src={cat.image} alt={cat.name} />
+                    <img src={getImageUrl(cat.image)} alt={cat.name} />
                   ) : (
                     <Layers size={28} color={selectedCategoryId === cat.id ? 'white' : 'var(--primary-color)'} />
                   )}
@@ -148,7 +148,7 @@ const Home = () => {
 
                 <Link to={`/product/${product.id}`} className="product-image-container">
                   {product.image ? (
-                    <img src={product.image} alt={product.name} className="product-image" />
+                    <img src={getImageUrl(product.image)} alt={product.name} className="product-image" />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
                       <ShoppingCart size={40} color="#cbd5e1" />

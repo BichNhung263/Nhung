@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { getImageUrl } from '../services/apiService';
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, itemCount } = useCart();
@@ -39,7 +40,7 @@ const Cart = () => {
               <div key={item.id} style={{ display: 'flex', gap: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid #f1f5f9' }}>
                 <div style={{ width: '100px', height: '100px', borderRadius: '1rem', overflow: 'hidden', flexShrink: 0, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {item.image ? (
-                    <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={getImageUrl(item.image)} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <ShoppingBag size={32} color="#cbd5e1" />
                   )}

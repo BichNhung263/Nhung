@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, MapPin, Phone, User, Mail, CreditCard, Truck, CheckCircle, Loader2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { orderService, paymentService } from '../services/apiService';
+import { orderService, paymentService, getImageUrl } from '../services/apiService';
 
 const Checkout = () => {
   const { cartItems, cartTotal, clearCart, itemCount } = useCart();
@@ -257,7 +257,7 @@ Ghi chú: ${form.note || 'Không có'}`;
                   <div key={item.id} style={{ display: 'flex', gap: '0.875rem', alignItems: 'center' }}>
                     <div style={{ width: '56px', height: '56px', borderRadius: '0.75rem', overflow: 'hidden', flexShrink: 0, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f1f5f9' }}>
                       {item.image ? (
-                        <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={getImageUrl(item.image)} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
                         <ShoppingBag size={20} color="#cbd5e1" />
                       )}

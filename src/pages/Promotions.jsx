@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Ticket, Zap, Gift, Clock, ArrowRight, Tag, Percent, ShoppingCart, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { productService } from '../services/apiService';
+import { productService, getImageUrl } from '../services/apiService';
 import { useCart } from '../context/CartContext';
 
 const Promotions = () => {
@@ -161,7 +161,7 @@ const Promotions = () => {
               <span className="product-badge" style={{ background: '#ef4444', color: 'white' }}>-{product.discount}%</span>
               <Link to={`/product/${product.id}`} className="product-image-container">
                 {product.image ? (
-                  <img src={product.image} alt={product.name} className="product-image" />
+                  <img src={getImageUrl(product.image)} alt={product.name} className="product-image" />
                 ) : (
                   <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
                     <ShoppingCart size={40} color="#cbd5e1" />

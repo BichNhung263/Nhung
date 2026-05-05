@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ShoppingCart, Heart, ArrowLeft, Star, ShieldCheck, Truck, RotateCcw, Plus, Minus, Check } from 'lucide-react';
-import { productService } from '../services/apiService';
+import { productService, getImageUrl } from '../services/apiService';
 import { useCart } from '../context/CartContext';
 
 const ProductDetail = () => {
@@ -86,7 +86,7 @@ const ProductDetail = () => {
             justifyContent: 'center'
           }}>
             {product.image ? (
-              <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getImageUrl(product.image)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               <ShoppingCart size={80} color="#cbd5e1" />
             )}
@@ -199,7 +199,7 @@ const ProductDetail = () => {
               <div key={p.id} className="product-card">
                 <Link to={`/product/${p.id}`} className="product-image-container">
                   {p.image ? (
-                    <img src={p.image} alt={p.name} className="product-image" />
+                    <img src={getImageUrl(p.image)} alt={p.name} className="product-image" />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
                       <ShoppingCart size={32} color="#cbd5e1" />
