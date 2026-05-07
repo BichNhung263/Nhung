@@ -13,6 +13,7 @@ import Promotions from './pages/Promotions';
 import Contact from './pages/Contact';
 import MockPayment from './pages/MockPayment';
 import VNPayReturn from './pages/VNPayReturn';
+import ChatAI from './components/ChatAI';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import './index.css';
@@ -37,6 +38,7 @@ function App() {
               <Route path="/mock-payment" element={<MockPayment />} />
               <Route path="/vnpay-return" element={<VNPayReturn />} />
             </Routes>
+            <ChatAI />
             <Footer />
           </div>
         </Router>

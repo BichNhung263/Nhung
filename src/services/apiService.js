@@ -1,6 +1,7 @@
 import axios from 'axios';
+const BASE_URL = 'https://localhost:7038'; // Hoặc http://localhost:5000 tùy máy bạn
 
-const BASE_URL = 'https://hothibichnhung-2123110314.onrender.com';
+//const BASE_URL = 'https://hothibichnhung-2123110314.onrender.com';
 const API_BASE_URL = `${BASE_URL}/api`;
 
 export const getImageUrl = (url) => {
