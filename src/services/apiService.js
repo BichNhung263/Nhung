@@ -1,13 +1,19 @@
 import axios from 'axios';
-const BASE_URL = 'https://localhost:7038'; // Hoặc http://localhost:5000 tùy máy bạn
 
-//const BASE_URL = 'https://hothibichnhung-2123110314.onrender.com';
+// ✅ Tự động nhận diện môi trường: Localhost hoặc Render
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const BASE_URL = isLocal 
+  ? 'https://localhost:7038' 
+  : 'https://hothibichnhung-2123110314.onrender.com';
+
 const API_BASE_URL = `${BASE_URL}/api`;
 
 export const getImageUrl = (url) => {
   if (!url) return '';
-  if (url.includes('localhost:7038')) {
-    return url.replace('https://localhost:7038', BASE_URL);
+  if (url.includes('localhost:7038') || url.includes('onrender.com')) {
+    // Nếu là link tuyệt đối, chỉ cần đảm bảo nó dùng đúng BASE_URL hiện tại
+    const path = url.split('/api/')[1] || url.split('/uploads/')[1];
+    if (path) return `${BASE_URL}/uploads/${path.split('/').pop()}`;
   }
   if (url.startsWith('/')) {
     return `${BASE_URL}${url}`;
@@ -27,32 +33,16 @@ export const productService = {
   getById: (id) => api.get(`/Products/${id}`),
 };
 
-export const categoryService = {
-  getAll: () => api.get('/Categories'),
-  getById: (id) => api.get(`/Categories/${id}`),
-};
-
-export const orderService = {
-  create: (data) => api.post('/Orders', data),
-  getAll: () => api.get('/Orders'),
-  getById: (id) => api.get(`/Orders/${id}`),
-};
-
 export const userService = {
-  login: (credentials) => api.post('/Users/login', credentials),
-  register: (userData) => api.post('/Users', userData),
-  getAll: () => api.get('/Users'),
-  getById: (id) => api.get(`/Users/${id}`),
+  login: (data) => api.post('/Users/login', data),
+  register: (data) => api.post('/Users', data),
+  forgotPassword: (data) => api.post('/Users/forgot-password', data),
+  resetPassword: (data) => api.post('/Users/reset-password', data),
 };
 
 export const paymentService = {
-  createVnPayUrl: (data) => api.post('/Payments/create-vnpay-url', data),
-  processVnPayReturn: (params) => api.get(`/Payments/vnpay-return${params}`),
-  createDemoVnPayUrl: async ({ amount, orderId }) => {
-    // Gọi thẳng sang Node.js server demo vnpay
-    const response = await fetch(`http://localhost:3000/payment?amount=${amount}&orderId=${orderId}`);
-    return await response.json();
-  }
+  createPayment: (orderId) => api.post(`/Payments/vn-pay?orderId=${orderId}`),
+  processVnPayReturn: (queryString) => api.get(`/Payments/vnpay-return${queryString}`),
 };
 
 export default api;

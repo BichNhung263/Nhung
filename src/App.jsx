@@ -13,6 +13,8 @@ import Promotions from './pages/Promotions';
 import Contact from './pages/Contact';
 import MockPayment from './pages/MockPayment';
 import VNPayReturn from './pages/VNPayReturn';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import ChatAI from './components/ChatAI';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -37,6 +39,8 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/mock-payment" element={<MockPayment />} />
               <Route path="/vnpay-return" element={<VNPayReturn />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
             <ChatAI />
             <Footer />

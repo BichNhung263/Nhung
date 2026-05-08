@@ -42,9 +42,11 @@ const ChatAI = () => {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Lỗi Chat AI:', error);
+      // Lấy thông báo lỗi chi tiết từ Server nếu có
+      const errorDetail = error.response?.data?.answer || error.message;
       const botMessage = { 
         id: Date.now() + 1, 
-        text: "Hệ thống đang bận hoặc chưa nhận được API Key. Bạn hãy thử Restart lại Backend (ASP.NET) nhé!", 
+        text: `Hệ thống báo lỗi: ${errorDetail}. Bạn hãy kiểm tra lại API Key hoặc Restart Backend nhé!`, 
         isBot: true 
       };
       setMessages(prev => [...prev, botMessage]);
